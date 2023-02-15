@@ -14,6 +14,17 @@
 /* Create an empty queue */
 struct list_head *q_new()
 {
+    struct list_head *head = malloc(sizeof(struct list_head));
+    if (!head)
+        return NULL;
+    INIT_LIST_HEAD(head);
+
+    return head;
+}
+
+/* Free all storage used by queue */
+void q_free(struct list_head *l)
+{
     struct list_head *li, *safe;
 
     list_for_each_safe (li, safe, l)
@@ -21,8 +32,8 @@ struct list_head *q_new()
     free(l);
 }
 
-/* Free all storage used by queue */
-void q_free(struct list_head *l)
+/* Insert an element at head of queue */
+bool q_insert_head(struct list_head *head, char *s)
 {
     if (!head)
         return false;
@@ -41,8 +52,8 @@ void q_free(struct list_head *l)
     return true;
 }
 
-/* Insert an element at head of queue */
-bool q_insert_head(struct list_head *head, char *s)
+/* Insert an element at tail of queue */
+bool q_insert_tail(struct list_head *head, char *s)
 {
     if (!head)
         return false;
@@ -61,12 +72,6 @@ bool q_insert_head(struct list_head *head, char *s)
     return true;
 }
 
-/* Insert an element at tail of queue */
-bool q_insert_tail(struct list_head *head, char *s)
-{
-    return true;
-}
-
 /* Remove an element from head of queue */
 element_t *q_remove_head(struct list_head *head, char *sp, size_t bufsize)
 {
@@ -82,7 +87,15 @@ element_t *q_remove_tail(struct list_head *head, char *sp, size_t bufsize)
 /* Return number of elements in queue */
 int q_size(struct list_head *head)
 {
-    return -1;
+    if (!head)
+        return 0;
+
+    int len = 0;
+    struct list_head *li;
+
+    list_for_each (li, head)
+        len++;
+    return len;
 }
 
 /* Delete the middle node in queue */
