@@ -25,12 +25,15 @@ struct list_head *q_new()
 /* Free all storage used by queue */
 void q_free(struct list_head *l)
 {
+    if (!l)
+        return;
     element_t *li, *safe;
 
     list_for_each_entry_safe (li, safe, l, list) {
-        free(&li->list);
+        list_del(&li->list);
         q_release_element(li);
     }
+
     free(l);
 }
 
@@ -134,6 +137,7 @@ bool q_delete_mid(struct list_head *head)
 
     list_del(slow);
     q_release_element(container_of(slow, element_t, list));
+
     return true;
 }
 
@@ -154,6 +158,7 @@ bool q_delete_dup(struct list_head *head)
         if (cur->next == head) {
             if (dup) {
                 list_del(cur);
+                list_del(&cur_node->list);
                 q_release_element(cur_node);
             }
             break;
@@ -162,12 +167,13 @@ bool q_delete_dup(struct list_head *head)
 
         if (!strcmp(cur_node->value, next_node->value)) {
             list_del(cur);
+            list_del(&cur_node->list);
             q_release_element(cur_node);
             dup = true;
         }
         // delete last duplicate node
         else if (dup) {
-            list_del(cur);
+            list_del(&cur_node->list);
             q_release_element(cur_node);
             dup = false;
         }
@@ -218,7 +224,6 @@ void q_reverse(struct list_head *head)
 /* Reverse the nodes of the list k at a time */
 void q_reverseK(struct list_head *head, int k)
 {
-    // https://leetcode.com/problems/reverse-nodes-in-k-group/
     if (!head || list_empty(head))
         return;
 
@@ -319,7 +324,7 @@ int q_descend(struct list_head *head)
         if (!max || strcmp(entry->value, max) > 0)
             max = entry->value;
         else {
-            list_del(&entry->list);
+            list_del(cur);
             q_release_element(entry);
         }
     }
