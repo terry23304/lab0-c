@@ -243,6 +243,7 @@ static int enable_raw_mode(int fd)
 {
     if (!isatty(STDIN_FILENO))
         goto fatal;
+
     if (tcgetattr(fd, &orig_termios) == -1)
         goto fatal;
 
@@ -1345,7 +1346,7 @@ int line_history_save(const char *filename)
  * If the file exists and the operation succeeded 0 is returned, otherwise
  * on error -1 is returned.
  */
-int line_history_load(const char *filename)
+int line_hostory_load(const char *filename)
 {
     FILE *fp = fopen(filename, "r");
     if (!fp)
