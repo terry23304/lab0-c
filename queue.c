@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 /* Notice: sometimes, Cppcheck would find the potential NULL pointer bugs,
  * but some of them cannot occur. You can suppress them by adding the
@@ -213,10 +214,8 @@ void q_reverse(struct list_head *head)
 
     struct list_head *cur, *next = NULL;
 
-    list_for_each_safe (cur, next, head) {
-        list_del(cur);
-        list_add(cur, head);
-    }
+    list_for_each_safe (cur, next, head)
+        list_move(cur, head);
 }
 
 /* Reverse the nodes of the list k at a time */
@@ -306,7 +305,6 @@ void q_sort(struct list_head *head)
  * the right side of it */
 int q_descend(struct list_head *head)
 {
-    // https://leetcode.com/problems/remove-nodes-from-linked-list/
     if (!head || list_empty(head))
         return 0;
 
@@ -331,7 +329,6 @@ int q_descend(struct list_head *head)
 /* Merge all the queues into one sorted queue, which is in ascending order */
 int q_merge(struct list_head *head)
 {
-    // https://leetcode.com/problems/merge-k-sorted-lists/
     if (!head || list_empty(head))
         return 0;
     if (list_is_singular(head))

@@ -77,7 +77,6 @@ bool measure(int64_t *before_ticks,
 
     switch (mode) {
     case DUT(insert_head):
-        // 直接少做 DROP_SIZE 次，應改成排序完去除後DROP_SIZE
         for (size_t i = 0; i < N_MEASURES; i++) {
             char *s = get_random_string();
             dut_new();
